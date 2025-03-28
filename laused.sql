@@ -8,10 +8,11 @@
 -- db loomine
 create database Tarpv24
 
---?
+--db kustutamine
 DRop DataBASE Tarpv24
 
---?
+--tabeli Gender loomine
+use Tarpv24
 create table Gender
 (
 Id int NOT NULL primary key,
@@ -27,16 +28,15 @@ GenderId int
 )
 
 --- andmete sisestamine tabelisse
-insert into Gender (Id, Gender)
+insert into Gender (Gender)
 values (1, 'Female')
 insert into Gender (Id, Gender)
 values (2, 'Male')
-
---- ?
+--- Lisab välisvõtme tabelisse 
 alter table Person add constraint tblPerson_GenderId_FK
 foreign key (GenderId) references Gender(Id)
 
--- ?
+-- Lisab uue kirje tabelisse
 insert into Person (Id, Name, Email, GenderId)
 values (1, 'Supermees', 's@s.com', 2)
 insert into Person (Id, Name, Email, GenderId)
@@ -55,11 +55,11 @@ values (7, 'Spiderman', 'spider@spiderman.com', 2)
 -- vaatame tabeli andmeid
 select * from Person
 
---- ?
+--- Eemaldab välisvõtme piiramise 
 alter table Person
 drop constraint tblPerson_GenderId_FK
 
--- ?
+-- Lisab uue kirje tabelisse
 insert into Gender (Id, Gender)
 values (3, 'Unknown')
 -- lisame võõrvõtme uuesti
@@ -74,7 +74,7 @@ select * from Gender
 insert into Person (Id, Name, Email)
 values (8, 'Test', 'Test')
 
----?
+---Lisab uue veeru Age tabelisse Person
 alter table Person
 add Age nvarchar(10)
 
@@ -83,14 +83,14 @@ update Person
 set Age = 149
 where Id = 8
 
---?
+--Lisab tabelisse Person piirangu CK_Person_Age
 alter table Person
 add constraint CK_Person_Age check (Age > 0 and Age < 150)
 
 insert into Person (Id, Name, Email, GenderId, Age)
 values (9, 'Test', 'Test', 2, 160)
 
---?
+--Kustutab kirje tabelist Person
 select * from Person
 go
 delete from Person where Id = 8
@@ -101,7 +101,7 @@ select * from Person
 alter table Person
 add City nvarchar(25)
 
--- ?
+-- Tõmbab kõik andmed tabelist Person, kus veeru City väärtus on 'Gotham'.
 select * from Person where City = 'Gotham'
 
 
@@ -109,26 +109,26 @@ select * from Person where City = 'Gotham'
 select * from Person where City <> 'Gotham'
 select * from Person where City != 'Gotham'
 
--- ?
+--  Vanuse järgi valik.
 select *from Person where Age = 100 or 
 Age = 50 or Age = 20
 select * from Person where Age in (100, 50, 20)
 
 
---- ?
+--- Valik linnast, mis algab tähega "n" ja valik e-posti aadressidest, mis sisaldavad "@"
 select * from Person where City like 'n%'
 select * from Person where Email like '%@%'
 
--- ?
+-- Valik kirjetest, kus veerus Email ei ole "@"
 select * from Person where Email not like '%@%'
 
 --- näitab, kelle on emailis ees ja peale @-märki
 -- ainult üks täht
 select * from Person where Email like '_@_.com'
 
---?
+--Valik kirjetest, kus nimi ei alga tähtedega "W", "A" või "S".
 select * from Person where Name like '[^WAS]%'
---- ?
+--- Valik kirjetest, kus linn on 'Gotham' või 'New York' ja vanus on 40 või rohkem.
 select * from Person where (City = 'Gotham' or City = 'New York')
 and Age >= 40
 
